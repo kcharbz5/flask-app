@@ -1,0 +1,29 @@
+version: '2'
+services:
+  mongo:
+    build: ./mongo
+    restart: always
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - mongo_net
+      
+  webserver:
+    depends_on: 
+      - mongo
+    build: ./web
+    ports: 
+      - 5000:5000
+    restart: always
+    links:
+      - mongo:mongo
+    networks:
+      #- mysql_net
+      - mongo_net
+
+volumes:
+  mongo_data:
+
+networks:
+  mongo_net:
+    driver: bridge
